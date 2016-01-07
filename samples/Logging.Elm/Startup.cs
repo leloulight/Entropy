@@ -1,4 +1,5 @@
 using Microsoft.AspNet.Builder;
+using Microsoft.AspNet.Hosting;
 using Microsoft.AspNet.Http;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
@@ -40,12 +41,22 @@ namespace ElmSampleApp
                     logger.LogError("Mort");
                 }
                 // This will not get logged because the filter has been set to LogLevel.Information and above
-                using (logger.BeginScope("verbose"))
+                using (logger.BeginScope("debug"))
                 {
-                    logger.LogVerbose("some verbose stuff");
+                    logger.LogDebug("some debug stuff");
                 }
             });
             logger.LogInformation("This message is not in a scope");
+        }
+
+        public static void Main(string[] args)
+        {
+            var application = new WebApplicationBuilder()
+                .UseConfiguration(WebApplicationConfiguration.GetDefault(args))
+                .UseStartup<Startup>()
+                .Build();
+
+            application.Run();
         }
     }
 }
